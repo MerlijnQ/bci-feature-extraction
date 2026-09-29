@@ -2,7 +2,7 @@
 Real-time feature extraction pipeline
 """
 
-from pylsl import StreamInlet, resolve_stream
+from pylsl import StreamInlet, resolve_streams
 from src.window import SlidingWindow
 from src.bandpower import BandPower
 from src.log import FeatureLogger
@@ -11,8 +11,9 @@ import numpy as np
 FS = 250
 N_CHANNELS = 8
 WINDOW_SECONDS = 0.5
-WINDOW_SIZE = FS * WINDOW_SECONDS
-CHANNEL_IDX = [1, 3]
+WINDOW_SIZE = int(FS * WINDOW_SECONDS)
+# CHANGE THIS
+CHANNEL_IDX = [0, 1]
 
 #Resulting overlaps for different windows
 #0.5 seconds = (1-25/125) = 0.8
@@ -25,17 +26,22 @@ CHANNEL_IDX = [1, 3]
 # I.e. some frequencies might not be visible meaning we cannot pick up those at the end of the bet spectrum
 
 
-streams = resolve_stream("type", "EEG")
+streams = resolve_streams(1)
 inlet = StreamInlet(streams[0])
 
-window = SlidingWindow(size=WINDOW_SIZE, step=FS // 10)
+# CHANGE THIS
+# give 2 channels for testing
+window = SlidingWindow(size=WINDOW_SIZE, step=FS // 10, channels= 8)
 feature = BandPower(fs=FS, band=(8, 12))
-logger = FeatureLogger("features_{WINDOW_SECONDS}.csv")
+logger = FeatureLogger(f"features_size_{WINDOW_SECONDS}.csv")
 
-window.start_time()
+window.start_clock()
 
 while True:
     sample, _ = inlet.pull_sample()
+    # CHANGE THIS
+    # pick just one channel for testing
+    # sample = sample[:2]
     win = window.update(sample)
 
     if win is not None:

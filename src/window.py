@@ -37,6 +37,7 @@ class SlidingWindow:
         self.is_full = False
         self.start_time = None
 
+    # clock to measure how long to fill up the first window
     def start_clock(self):
         self.start_time = lsl.local_clock()
 
@@ -57,8 +58,8 @@ class SlidingWindow:
             if not self.is_full:
                 self.is_full = True
                 end_time = lsl.local_clock()
-                time_span = self.start_time - end_time
-                print(f"Time taken to full up buffer: {time_span}")
+                time_span = end_time - self.start_time
+                print(f"Time taken to full up buffer: {time_span:.2f} seconds")
                 print(f"Size of window {self.buffer.T.shape}")
 
             
