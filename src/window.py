@@ -49,10 +49,11 @@ class SlidingWindow:
         if self.is_full:
             self.counter += len(sample)
 
-
+        # sliding window: keep the last 'window size' samples
         if len(self.buffer) > self.size:
             self.buffer = self.buffer[-self.size:]      
 
+        # return window only when the 'sliding' reaches the step size 
         if len(self.buffer) == self.size and self.counter % self.step == 0:
 
             if not self.is_full:
@@ -64,7 +65,7 @@ class SlidingWindow:
 
             
             if len(self.buffer.shape) > 1:
-                return self.buffer.T
+                return self.buffer
             else:
                 return self.buffer
             

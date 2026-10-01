@@ -45,9 +45,12 @@ while True:
     win = window.update(sample)
 
     if win is not None:
-        #win = (time, channels). We want to extract channels at CHANNEL_IDX
+        # win = (samples, channels). We want to extract channels at CHANNEL_IDX
+        # print(f"Window shape: {win.shape}")
         win = win[:, CHANNEL_IDX]
+        print(f"Window shape after channel selection: {win.shape}")
         feats = feature.compute(win)
         log_psd = np.log10(feats)
         logger.log(feats) #logging a tuple?
+        print(f"len(feats): {len(feats)}")
         print("Features:", feats)

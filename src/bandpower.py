@@ -17,4 +17,5 @@ class BandPower:
         # frequencies and power spectral density
         freqs, psd = welch(window, fs=self.fs, axis=0)
         idx = (freqs >= self.band[0]) & (freqs <= self.band[1])
+        # return mean of density of frequencies only between 8 and 12 Hz
         return psd[idx].mean(axis=0)
