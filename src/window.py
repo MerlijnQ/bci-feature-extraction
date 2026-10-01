@@ -61,10 +61,11 @@ class SlidingWindow:
                 end_time = lsl.local_clock()
                 time_span = end_time - self.start_time
                 print(f"Time taken to full up buffer: {time_span:.2f} seconds")
-                print(f"Size of window {self.buffer.T.shape}")
+                print(f"Size of window {self.buffer.shape}")
 
             
             if len(self.buffer.shape) > 1:
+                # removed the transpose to keep the shape as (samples, channels) for the Welch
                 return self.buffer
             else:
                 return self.buffer
