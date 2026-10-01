@@ -13,7 +13,7 @@ N_CHANNELS = 9
 WINDOW_SECONDS = 2.5
 WINDOW_SIZE = int(FS * WINDOW_SECONDS)
 # CHANGE THIS
-CHANNEL_IDX = [2, 3]
+CHANNEL_IDX = [1, 3]
 
 #Resulting overlaps for different windows
 #0.5 seconds = (1-25/125) = 0.8
@@ -28,7 +28,6 @@ CHANNEL_IDX = [2, 3]
 
 streams = resolve_streams(1)
 inlet = StreamInlet(streams[0])
-
 # CHANGE THIS
 # give 2 channels for testing
 window = SlidingWindow(size=WINDOW_SIZE, step=FS // 10, channels= 8)
@@ -49,9 +48,9 @@ while True:
         # win = (samples, channels). We want to extract channels at CHANNEL_IDX
         # print(f"Window shape: {win.shape}")
         win = win[:, CHANNEL_IDX]
-        print(f"Window shape after channel selection: {win.shape}")
+        # print(f"Window shape after channel selection: {win.shape}")
         feats = feature.compute(win)
         log_psd = np.log10(feats)
         logger.log(feats) #logging a tuple?
-        print(f"len(feats): {len(feats)}")
-        print("Features:", feats)
+        # print(f"len(feats): {len(feats)}")
+        # print("Features:", feats)
