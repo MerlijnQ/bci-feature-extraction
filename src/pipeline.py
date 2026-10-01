@@ -9,11 +9,11 @@ from src.log import FeatureLogger
 import numpy as np
 
 FS = 250
-N_CHANNELS = 8
-WINDOW_SECONDS = 0.5
+N_CHANNELS = 9
+WINDOW_SECONDS = 2.5
 WINDOW_SIZE = int(FS * WINDOW_SECONDS)
 # CHANGE THIS
-CHANNEL_IDX = [0, 1]
+CHANNEL_IDX = [2, 3]
 
 #Resulting overlaps for different windows
 #0.5 seconds = (1-25/125) = 0.8
@@ -39,6 +39,7 @@ window.start_clock()
 
 while True:
     sample, _ = inlet.pull_sample()
+    sample = sample[:8]
     # CHANGE THIS
     # pick just one channel for testing
     # sample = sample[:2]
