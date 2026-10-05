@@ -4,8 +4,8 @@ Plot band power features in real time
 
 import matplotlib.pyplot as plt
 from pylsl import StreamInlet, resolve_byprop, resolve_streams
-from src.window import SlidingWindow
-from src.bandpower import BandPower
+from src.utils.window import SlidingWindow
+from src.utils.bandpower import BandPower
 
 FS = 250
 N_CHANNELS = 8

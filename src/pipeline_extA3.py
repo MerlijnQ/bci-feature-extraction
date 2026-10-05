@@ -3,9 +3,9 @@ Real-time feature extraction pipeline
 """
 
 from pylsl import StreamInlet, resolve_streams
-from src.window import SlidingWindow
-from src.bandpower import BandPower
-from src.log import FeatureLogger
+from src.utils.window import SlidingWindow
+from src.utils.bandpower import BandPower
+from src.utils.log import FeatureLogger
 import numpy as np
 
 FS = 250
