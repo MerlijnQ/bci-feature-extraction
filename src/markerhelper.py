@@ -43,10 +43,11 @@ def run_motor_imagery_paradigm(outlet, total_trials=1):
         time.sleep(0.250) # wait till 3.25 s
 
         # 4. record Motor Imagery + Marker
-        # print("time before recording is", time.perf_counter() - start_time)
+        print("time before recording is", time.perf_counter() - start_time)
+        outlet.push_sample([f"IMAGERY_{condition}"])
         while time.perf_counter() - start_time < 4.250:
-            outlet.push_sample([f"IMAGERY_{condition}"])
-        # print("time after recording is", time.perf_counter() - start_time)
+            time.sleep(0.001)
+        print("time after recording is", time.perf_counter() - start_time)
 
         # 5. keep until 8 s
         while time.perf_counter() - start_time < 8.000:
