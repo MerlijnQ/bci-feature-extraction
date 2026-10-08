@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt
 channels = ['C3', 'C4']
 
 window_seconds = 2.5
-data = pd.read_csv(f"../recorded_features.csv", header=None)
+data = pd.read_csv(f"recorded_features.csv", header=None)
 # data = data.iloc[:, 0:]
 data.plot()
 # plt.title(f"Feature stability for window size {window_seconds} seconds")
-plt.xlabel("Time (windows)")
+plt.xlabel("Sample index")
 plt.ylabel("PSD (log10)")
 plt.legend([f"{i}" for i in channels])
 plt.savefig(f"recorded_features_stability.pdf")

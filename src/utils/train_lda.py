@@ -6,7 +6,7 @@ from sklearn.pipeline import Pipeline
 import pandas as pd
 
 import pickle
-from bandpower import BandPower
+from src.utils.bandpower import BandPower
 CHANNEL_IDX = [1, 3]
 
 
@@ -18,19 +18,21 @@ def load_epochs(file_path):
 def epoch_to_features(epochs, fs=250, band=(8, 30)):
     """
     Convert epochs to features using band power extraction.
+    Now uses filfilt as we construct the LDA offline. Needs
+    to be change for quasi-causal or lfilter when deployed online.
     """
-    feature_extractor = BandPower(fs=fs, band=band)
+    PSD_extractor = BandPower(fs=fs, band=band)
 
     features = []
     for epoch in epochs:
         epoch = epoch[:, CHANNEL_IDX] #assuming epoch shape is (samples, channels)
-        feat = feature_extractor.compute(epoch)
+        psd = PSD_extractor.compute(epoch)
+        feat = np.log10(psd)  # Log-transform the PSD values
         features.append(feat)
         print(feat.shape)
 
     return np.array(features)
     
-
 def train_lda(features, labels):
     """
     Train an LDA classifier using the provided features and labels.
@@ -46,7 +48,7 @@ def train_lda(features, labels):
     print(f"Cross-validated accuracy: {np.mean(scores):.4f} ± {np.std(scores):.4f}")
     print(f"Individual fold accuracies: {scores}")
 
-epochs, labels = load_epochs("epochs.pkl")
+epochs, labels = load_epochs("src/epochs.pkl")
 features = epoch_to_features(epochs)
 data = pd.DataFrame(features)
 data.to_csv("../../recorded_features.csv", index=False, header=False)
