@@ -15,21 +15,19 @@ def load_epochs(file_path):
         epochs, labels = pickle.load(f)
     return epochs, labels
 
-def epoch_to_features(epochs, fs=250, band=(8, 30)):
+def epoch_to_features(epochs, fs=250, band=(8, 32)):
     """
     Convert epochs to features using band power extraction.
     Now uses filfilt as we construct the LDA offline. Needs
     to be change for quasi-causal or lfilter when deployed online.
     """
     PSD_extractor = BandPower(fs=fs, band=band)
-
     features = []
     for epoch in epochs:
         epoch = epoch[:, CHANNEL_IDX] #assuming epoch shape is (samples, channels)
         psd = PSD_extractor.compute(epoch)
         feat = np.log10(psd)  # Log-transform the PSD values
         features.append(feat)
-        print(feat.shape)
 
     return np.array(features)
     
@@ -50,6 +48,12 @@ def train_lda(features, labels):
 
 epochs, labels = load_epochs("src/epochs.pkl")
 features = epoch_to_features(epochs)
-data = pd.DataFrame(features)
-data.to_csv("../../recorded_features.csv", index=False, header=False)
+
+features_left = features[labels == 'IMAGERY_LEFT']
+features_right = features[labels == 'IMAGERY_RIGHT']
+
+data_left = pd.DataFrame(features_left)
+data_left.to_csv("recorded_features_left.csv", index=False, header=False)
+data_right = pd.DataFrame(features_right)
+data_right.to_csv("recorded_features_right.csv", index=False, header=False)
 train_lda(features, labels)
