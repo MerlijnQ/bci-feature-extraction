@@ -9,7 +9,7 @@ channels = ['C3', 'C4']
 
 window_seconds = 2.5
 data = pd.read_csv(f"../features_size_{window_seconds}.csv", header=None)
-data = data.iloc[:, 1:]
+data = data.iloc[:, 0:]
 data.plot()
 # plt.title(f"Feature stability for window size {window_seconds} seconds")
 plt.xlabel("Time (windows)")

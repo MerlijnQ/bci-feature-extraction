@@ -39,15 +39,15 @@ def run_motor_imagery_paradigm(outlet, total_trials=1):
         while time.perf_counter() - start_time < 3.000:
             time.sleep(0.0001)  # wait untilt time is exactly 3 s
         print(f"CUE_{condition}")
-        outlet.push_sample([f"CUE_{condition}"])
+        # outlet.push_sample([f"CUE_{condition}"])
         time.sleep(0.250) # wait till 3.25 s
 
         # 4. record Motor Imagery + Marker
-        print("time before recording is", time.perf_counter() - start_time)
+        # print("time before recording is", time.perf_counter() - start_time)
         outlet.push_sample([f"IMAGERY_{condition}"])
         while time.perf_counter() - start_time < 4.250:
             time.sleep(0.001)
-        print("time after recording is", time.perf_counter() - start_time)
+        # print("time after recording is", time.perf_counter() - start_time)
 
         # 5. keep until 8 s
         while time.perf_counter() - start_time < 8.000:
@@ -59,7 +59,9 @@ def run_motor_imagery_paradigm(outlet, total_trials=1):
         interval = random.uniform(0.5, 2.5)
         time.sleep(interval)
        
-        
+    print("end of experiment")
+
+
 if __name__ == '__main__':
     # Initialize the marker stream first
     marker_outlet = create_marker_outlet()
@@ -75,4 +77,4 @@ if __name__ == '__main__':
     input("\n--> Press ENTER in this terminal once LabRecorder is recording to start the task...")
 
     # Start Experiment
-    run_motor_imagery_paradigm(marker_outlet, total_trials=2)
+    run_motor_imagery_paradigm(marker_outlet, total_trials=30)

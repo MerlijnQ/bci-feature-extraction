@@ -3,7 +3,7 @@ import pyxdf
 import pickle
 
 # LOAD XDF FILE AND SEPARATE STREAMS
-xdf_path = "/mnt/c/Users/Gianluca/Downloads/sub-P001/ses-S001/eeg/sub-P001_ses-S001_task-Default_run-001_eeg.xdf"  # Update with your .xdf file path
+xdf_path = "/mnt/c/Users/Gianluca/Downloads/sub-P002/ses-S001/eeg/sub-P002_ses-S001_task-Default_run-001_eeg.xdf"  # Update with your .xdf file path
 streams, header = pyxdf.load_xdf(xdf_path)
 
 eeg_stream = None
@@ -38,8 +38,9 @@ def get_stream_data(stream):
 # process and extract the features 
 #Epoch classification window 3.25–4.25 s 
 
-def epoch_eeg_data(eeg_data, eeg_timestamps, marker_timestamps, marker_series, epoch_onset=3.25, duration=1.0):
+def epoch_eeg_data(eeg_data, eeg_timestamps, marker_timestamps, marker_series, epoch_onset=0, duration=1):
 
+    print(eeg_timestamps, marker_timestamps)
     epochs = []
     labels = []
     for marker_time, marker_label in zip(marker_timestamps, marker_series):
@@ -47,7 +48,7 @@ def epoch_eeg_data(eeg_data, eeg_timestamps, marker_timestamps, marker_series, e
         start_idx = np.argmin(np.abs(eeg_timestamps - (marker_time + epoch_onset)))
 
         end = eeg_timestamps[start_idx] + duration
-
+        print(eeg_timestamps[start_idx] , end)
         end_idx = np.argmin(np.abs(eeg_timestamps - end))
         
         # Extract the epoch data
@@ -55,7 +56,25 @@ def epoch_eeg_data(eeg_data, eeg_timestamps, marker_timestamps, marker_series, e
         epochs.append(epoch_data)
         labels.append(marker_label)
 
-    return (np.array(epochs), np.array(labels))
+    #make shapes the same for all epochs
+    min_length = min([len(epoch) for epoch in epochs])
+    max_length = max([len(epoch) for epoch in epochs])
+    counter = 0
+    counter_2 = 0
+    for epoch in epochs:
+        if len(epoch) != min_length:
+            counter += 1
+        else:
+            counter_2 += 1
+    print(f"Number of epochs with length {min_length}: {counter_2}")
+    print(f"Number of epochs with length different from {min_length}: {counter}")
+    print(f"Max epoch length: {max_length}, Min epoch length: {min_length}")
+        
+    new_epochs = [epoch[:min_length] for epoch in epochs]
+    print(f"Epochs shape: {len(new_epochs)} epochs, each with {min_length} samples and {eeg_data.shape[1]} channels")
+    del epochs
+
+    return (np.array(new_epochs), np.array(labels))
 
 #save epochs
 eeg_data, eeg_timestamps, marker_series, marker_timestamps, fs = get_stream_data(streams)
