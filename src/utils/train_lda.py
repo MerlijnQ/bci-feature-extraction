@@ -49,5 +49,5 @@ def train_lda(features, labels):
 epochs, labels = load_epochs("epochs.pkl")
 features = epoch_to_features(epochs)
 data = pd.DataFrame(features)
-data.to_csv("../../features_size_2.5.csv", index=False, header=False)
+data.to_csv("../../recorded_features.csv", index=False, header=False)
 train_lda(features, labels)
