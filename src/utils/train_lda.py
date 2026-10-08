@@ -5,6 +5,8 @@ from sklearn.pipeline import Pipeline
 
 import pickle
 from bandpower import BandPower
+CHANNEL_IDX = [1, 3]
+
 
 def load_epochs(file_path):
     with open(file_path, "rb") as f:
@@ -19,6 +21,8 @@ def epoch_to_features(epochs, fs=250, band=(8, 30)):
 
     features = []
     for epoch in epochs:
+        print(epoch.shape)
+        epoch = epoch[:, CHANNEL_IDX] #assuming epoch shape is (samples, channels)
         feat = feature_extractor.compute(epoch)
         features.append(feat)
 
@@ -32,7 +36,7 @@ def train_lda(features, labels):
     pipeline = Pipeline([(('scaler', StandardScaler()),
                           ('classifier', LinearDiscriminantAnalysis()))])
 
-    scores = cross_val_score(pipeline, features, labels, cv=cv, scoring='accuracy')
+    scores = cross_val_score(pipeline, features, labels, cv=cv, scoring='balanced_accuracy')
     print(f"Cross-validated accuracy: {np.mean(scores):.4f} ± {np.std(scores):.4f}")
     print(f"Individual fold accuracies: {scores}")
 
